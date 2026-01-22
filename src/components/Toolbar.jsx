@@ -23,7 +23,7 @@ const Toolbar = () => {
         onMouseMove={(e) => mouseX.set(e.pageX)}
         onMouseLeave={() => mouseX.set(Infinity)}
         className="flex h-[64px] items-end gap-2 rounded-2xl
-                   bg-white/10 backdrop-blur-2xl px-3 pb-3
+                   bg-black/10 backdrop-blur-2xl px-3 pb-3
                    border border-white/20 shadow-2xl"
       >
         {icons.map((item) => (
@@ -45,16 +45,14 @@ function IconContainer({ mouseX, children, item }) {
     return val - bounds.x - bounds.width / 2;
   });
 
-  // Kattalashish diapazoni
   const widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
   const heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
   const iconSizeTransform = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
 
-  // SAKRASH EFFEKTI UCHUN: mass kam, stiffness baland, damping past
   const springConfig = {
     mass: 0.1,
-    stiffness: 250, // Joyiga tez qaytishi uchun
-    damping: 10     // "Sakrash" (bounce) hosil qilishi uchun
+    stiffness: 250,
+    damping: 10
   };
 
   const width = useSpring(widthTransform, springConfig);
@@ -68,7 +66,6 @@ function IconContainer({ mouseX, children, item }) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{ width, height }}
-        /* Bosganda sakrash effekti */
         whileTap={{ scale: 0.4 }}
         className="group flex items-center justify-center rounded-xl
                    bg-white/5 border border-white/5 text-white/80
@@ -81,7 +78,6 @@ function IconContainer({ mouseX, children, item }) {
               initial={{ opacity: 0, y: 10, scale: 0.8, x: '-50%' }}
               animate={{ opacity: 1, y: -65, scale: 1, x: '-50%' }}
               exit={{ opacity: 0, y: 10, scale: 0.8, x: '-50%' }}
-              // Label uchun ham sakrash
               transition={{ type: "spring", stiffness: 300, damping: 15 }}
               className="absolute left-1/2 px-2.5 py-1 rounded-lg
                          bg-black/80 backdrop-blur-md text-white
@@ -101,7 +97,6 @@ function IconContainer({ mouseX, children, item }) {
             React.cloneElement(children, {
               size: "100%",
               strokeWidth: 1.5,
-              // Ikonaga biroz soya (macOS kabi)
               className: "drop-shadow-[0_2px_8px_rgba(255,255,255,0.3)]"
             })}
         </motion.div>

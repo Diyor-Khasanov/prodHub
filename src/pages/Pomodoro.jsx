@@ -1,9 +1,151 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'; // useRef qo'shildi
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Pomodoro = () => {
-  return (
-    <div>Pomodoro</div>
-  )
-}
+  const [bgImage] = useState(localStorage.getItem('bgImage'));
+  const [mode, setMode] = useState('focus');
+  const [isActive, setIsActive] = useState(false);
 
-export default Pomodoro
+  const alarmAudio = useRef(new Audio('../../public/assets/musics/alarm(when_end_pomodoro).mp3'));
+
+  const getStoredTime = (key, defaultValue) => {
+    const stored = sessionStorage.getItem(key);
+    return stored ? parseInt(stored) * 60 : defaultValue * 60;
+  };
+
+  const settings = {
+    focus: {
+      time: getStoredTime('focusTime', 25),
+      label: 'Focus Time',
+      color: 'text-blue-400',
+      btnColor: 'border-blue-400/40 text-blue-50',
+      liquid: 'bg-blue-500/30',
+      glow: 'bg-blue-500/20'
+    },
+    break: {
+      time: getStoredTime('breakTime', 5),
+      label: 'Short Break',
+      color: 'text-emerald-400',
+      btnColor: 'border-emerald-400/40 text-emerald-50',
+      liquid: 'bg-emerald-500/30',
+      glow: 'bg-emerald-500/20'
+    }
+  };
+
+  const [seconds, setSeconds] = useState(settings[mode].time);
+  const progress = (seconds / settings[mode].time) * 100;
+
+  useEffect(() => {
+    setSeconds(settings[mode].time);
+  }, [mode]);
+
+  useEffect(() => {
+    let interval = null;
+    if (isActive && seconds > 0) {
+      interval = setInterval(() => {
+        setSeconds((prev) => prev - 1);
+      }, 1000);
+    } else if (seconds === 0) {
+      playAlarm();
+      clearInterval(interval);
+      toggleMode();
+    }
+    return () => clearInterval(interval);
+  }, [isActive, seconds, mode]);
+
+  const playAlarm = () => {
+    alarmAudio.current.currentTime = 0;
+    alarmAudio.current.play().catch(error => console.log("Ovoz chalishda xato:", error));
+  };
+
+  const toggleMode = () => {
+    const nextMode = mode === 'focus' ? 'break' : 'focus';
+    setMode(nextMode);
+    setSeconds(getStoredTime(nextMode === 'focus' ? 'focusTime' : 'breakTime', nextMode === 'focus' ? 25 : 5));
+    setIsActive(false);
+  };
+
+  const formatTime = (time) => {
+    const mins = Math.floor(time / 60);
+    const secs = time % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className='relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-white'>
+      {bgImage ? (
+        <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+        </div>
+      ) : (
+        <div className="absolute inset-0 z-0 bg-slate-950" />
+      )}
+
+      <motion.div layout className='relative z-10 w-[90%] max-w-xl p-8 md:p-12 rounded-[40px] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl text-center'>
+        <div className="flex justify-center gap-4 mb-8">
+          {['focus', 'break'].map((m) => (
+            <button
+              key={m}
+              onClick={() => {
+                setMode(m);
+                setIsActive(false);
+                alarmAudio.current.pause();
+              }}
+              className={`px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${mode === m ? 'bg-white/10 border border-white/20' : 'opacity-40'}`}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-col justify-center items-center font-mono">
+          <AnimatePresence mode="wait">
+            <motion.h2 key={mode} className={`text-xl font-bold mb-2 tracking-[0.2em] uppercase ${settings[mode].color}`}>
+              {settings[mode].label}
+            </motion.h2>
+          </AnimatePresence>
+
+          <h1 className='text-7xl md:text-9xl font-bold tracking-tighter tabular-nums'>
+            {formatTime(seconds)}
+          </h1>
+
+          <div className='flex gap-4 mt-10 w-full'>
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                setIsActive(!isActive);
+                alarmAudio.current.pause();
+              }}
+              className={`relative flex-1 px-8 py-5 rounded-2xl overflow-hidden transition-all text-xl font-bold border ${isActive ? "border-red-500/40" : settings[mode].btnColor} bg-white/5 shadow-inner`}
+            >
+              <motion.div
+                initial={{ width: '100%' }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 1, ease: "linear" }}
+                className={`absolute inset-0 z-0 ${isActive ? 'bg-red-500/20' : settings[mode].liquid}`}
+                style={{ originX: 0 }}
+              />
+              <span className="relative z-10 tracking-widest uppercase">
+                {isActive ? 'Pause' : 'Start'}
+              </span>
+            </motion.button>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                setIsActive(false);
+                setSeconds(settings[mode].time);
+                alarmAudio.current.pause();
+              }}
+              className="px-8 py-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/20 text-xl font-bold transition-all uppercase tracking-widest"
+            >
+              Reset
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+export default Pomodoro;
