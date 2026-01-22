@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'; // useRef qo'shildi
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Pomodoro = () => {
@@ -6,7 +6,14 @@ const Pomodoro = () => {
   const [mode, setMode] = useState('focus');
   const [isActive, setIsActive] = useState(false);
 
-  const alarmAudio = useRef(new Audio('../../public/assets/musics/alarm(when_end_pomodoro).mp3'));
+  const alarmAudio = useRef(new Audio('/assets/musics/alarm(when_end_pomodoro).mp3'));
+
+  const macSpring = {
+    type: "spring",
+    stiffness: 200,
+    damping: 20,
+    mass: 1
+  };
 
   const getStoredTime = (key, defaultValue) => {
     const stored = sessionStorage.getItem(key);
@@ -24,7 +31,7 @@ const Pomodoro = () => {
     },
     break: {
       time: getStoredTime('breakTime', 5),
-      label: 'Short Break',
+      label: 'Take Break',
       color: 'text-emerald-400',
       btnColor: 'border-emerald-400/40 text-emerald-50',
       liquid: 'bg-emerald-500/30',
@@ -81,37 +88,66 @@ const Pomodoro = () => {
         <div className="absolute inset-0 z-0 bg-slate-950" />
       )}
 
-      <motion.div layout className='relative z-10 w-[90%] max-w-xl p-8 md:p-12 rounded-[40px] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl text-center'>
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={macSpring}
+        layout
+        className='relative z-10 w-[90%] max-w-xl p-8 md:p-12 rounded-[40px] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl text-center'
+      >
         <div className="flex justify-center gap-4 mb-8">
           {['focus', 'break'].map((m) => (
-            <button
+            <motion.button
               key={m}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 setMode(m);
                 setIsActive(false);
                 alarmAudio.current.pause();
               }}
-              className={`px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${mode === m ? 'bg-white/10 border border-white/20' : 'opacity-40'}`}
+              className={`relative px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${mode === m ? 'bg-white/10 border border-white/20' : 'opacity-40'}`}
             >
-              {m}
-            </button>
+              {mode === m && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 bg-white/5 rounded-full"
+                  transition={macSpring}
+                />
+              )}
+              <span className="relative z-10">{m}</span>
+            </motion.button>
           ))}
         </div>
 
         <div className="flex flex-col justify-center items-center font-mono">
           <AnimatePresence mode="wait">
-            <motion.h2 key={mode} className={`text-xl font-bold mb-2 tracking-[0.2em] uppercase ${settings[mode].color}`}>
+            <motion.h2
+              key={mode}
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -10, opacity: 0 }}
+              transition={macSpring}
+              className={`text-xl font-bold mb-2 tracking-[0.2em] uppercase ${settings[mode].color}`}
+            >
               {settings[mode].label}
             </motion.h2>
           </AnimatePresence>
 
-          <h1 className='text-7xl md:text-9xl font-bold tracking-tighter tabular-nums'>
+          <motion.h1
+            key={seconds}
+            initial={{ scale: 0.98, opacity: 0.9 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className='text-7xl md:text-9xl font-bold tracking-tighter tabular-nums'
+          >
             {formatTime(seconds)}
-          </h1>
+          </motion.h1>
 
           <div className='flex gap-4 mt-10 w-full'>
             <motion.button
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={macSpring}
               onClick={() => {
                 setIsActive(!isActive);
                 alarmAudio.current.pause();
@@ -131,7 +167,9 @@ const Pomodoro = () => {
             </motion.button>
 
             <motion.button
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              transition={macSpring}
               onClick={() => {
                 setIsActive(false);
                 setSeconds(settings[mode].time);
@@ -139,7 +177,13 @@ const Pomodoro = () => {
               }}
               className="px-8 py-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/20 text-xl font-bold transition-all uppercase tracking-widest"
             >
-              Reset
+              <motion.span
+                animate={{ rotate: isActive ? 0 : 360 }}
+                transition={{ duration: 0.5 }}
+                style={{ display: 'inline-block' }}
+              >
+                Reset
+              </motion.span>
             </motion.button>
           </div>
         </div>

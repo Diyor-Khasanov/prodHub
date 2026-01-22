@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { CircleUser, Quote } from 'lucide-react'; // Quote ikonkasini ham qo'shdik
+import { CircleUser, Quote } from 'lucide-react';
 
 const qoutes = [
-  // ISLOMIY MOTIVATSIYA
   {
     "quote": "No one has ever eaten a better meal than that which he has earned by working with his own hands.",
     "author": "Prophet Muhammad (S.A.W)"
@@ -45,8 +44,6 @@ const qoutes = [
     "quote": "The best way to get through this world is with a beautiful patience.",
     "author": "The Holy Quran"
   },
-
-  // DUNYOVIY MUVAFFAQIYAT VA MEHNAT
   {
     "quote": "The only way to do great work is to love what you do.",
     "author": "Steve Jobs"
@@ -167,8 +164,6 @@ const qoutes = [
     "quote": "Opportunities don't happen. You create them.",
     "author": "Chris Grosser"
   },
-
-  // RUMIY VA DONOLAR
   {
     "quote": "Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.",
     "author": "Rumi"
@@ -215,7 +210,7 @@ const qoutes = [
 const Home = () => {
   const [time, setTime] = useState(new Date());
   const [is24Hour, setIs24Hour] = useState(true);
-  const [bgImage, setBgImage] = useState(localStorage.getItem('bgImage'));
+  const [bgImage] = useState(localStorage.getItem('bgImage'));
   const [randomQuote, setRandomQuote] = useState({ quote: "", author: "" });
 
   useEffect(() => {
@@ -237,7 +232,6 @@ const Home = () => {
 
   return (
     <div className='relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-white'>
-      {/* Background Section */}
       {bgImage ? (
         <div className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-1000" style={{ backgroundImage: `url(${bgImage})` }}>
           <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
@@ -253,7 +247,6 @@ const Home = () => {
         animate={{ opacity: 1, y: 0 }}
         className='relative z-10 w-[90%] max-w-xl p-10 rounded-[40px] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl text-center'
       >
-        {/* Clock Display */}
         <div className="flex justify-center items-center text-6xl md:text-8xl font-mono font-bold tracking-tighter mb-2">
           {timeString.split('').map((char, index) => (
             <div key={index} className="relative overflow-hidden h-[100px] flex items-center">
@@ -264,6 +257,7 @@ const Home = () => {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -40, opacity: 0 }}
                   transition={{ duration: 0.4, ease: "backOut" }}
+                  className='text-[110px]'
                 >
                   {char === " " ? "\u00A0" : char}
                 </motion.span>
@@ -285,14 +279,12 @@ const Home = () => {
           {is24Hour ? "Switch to 12H" : "Switch to 24H"}
         </motion.button>
 
-        {/* Quote Block - Mana shu qism o'zgardi */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
           className="relative mt-4 mb-8 p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/5 overflow-hidden group"
         >
-          {/* Ochilib yopiluvchi qo'shtirnoqlar (background bezak sifatida) */}
           <span className="absolute top-2 left-4 text-6xl font-serif opacity-10 select-none">“</span>
           <span className="absolute bottom-[-10px] right-4 text-6xl font-serif opacity-10 select-none">”</span>
 
@@ -309,10 +301,10 @@ const Home = () => {
               transition={{ delay: 0.6 }}
               className="mt-6 flex justify-center items-center gap-2 text-sm font-bold uppercase tracking-widest text-blue-400/80"
             >
-              <div className="h-[1px] w-8 bg-blue-400/30"></div>
+              <div className="h-px w-8 bg-blue-400/30"></div>
               <CircleUser size={18} />
               {randomQuote.author}
-              <div className="h-[1px] w-8 bg-blue-400/30"></div>
+              <div className="h-px w-8 bg-blue-400/30"></div>
             </motion.div>
           </div>
         </motion.div>

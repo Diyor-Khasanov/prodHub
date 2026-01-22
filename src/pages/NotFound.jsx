@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Compass, Home, RefreshCcw } from 'lucide-react';
 import Toolbar from '../components/Toolbar';
@@ -6,42 +6,39 @@ import { Link } from 'react-router-dom';
 
 const NotFoundPage = () => {
   const springTransition = { type: "spring", stiffness: 300, damping: 20 };
+  const [bgImage] = useState(localStorage.getItem('bgImage'))
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950 bg-linear-to-br from-slate-950 to-blue-950">
-
-      <div className="absolute inset-0 z-0">
-        <motion.div
-          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/20 blur-[100px] rounded-full"
-        />
-        <motion.div
-          animate={{ x: [0, -40, 0], y: [0, 60, 0] }}
-          transition={{ duration: 15, repeat: Infinity }}
-          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/20 blur-[120px] rounded-full"
-        />
-      </div>
+      {bgImage ? (
+        <div className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-1000" style={{ backgroundImage: `url(${bgImage})` }}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+        </div>
+      ) : (
+        <div className="absolute inset-0 z-0 bg-slate-950">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/20 blur-[100px] rounded-full" />
+        </div>
+      )}
 
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={springTransition}
         className="relative z-10 w-[90%] max-w-xl p-12 rounded-[40px]
-          bg-black/40 backdrop-blur-3xl
+          bg-black/10 backdrop-blur-3xl
           border border-white/10 shadow-2xl text-center"
       >
         <motion.div
           className="mx-auto w-24 h-24 mb-8 bg-linear-to-tr from-violet-600 to-blue-500
-            rounded-[22px] flex items-center justify-center shadow-lg shadow-blue-500/30"
+            rounded-[22px] flex items-center justify-center shadow-lg shadow-black/10"
         >
-          <img src="../../public/assets/icon.png" alt="" className='rounded-2xl' />
+          <img src="/assets/icon.png" alt="" className='rounded-2xl' />
         </motion.div>
 
         <h1 className="text-6xl font-bold tracking-tight text-white mb-4">
           404
         </h1>
-        <p className="text-lg text-slate-400 mb-10 font-medium">
+        <p className="text-lg text-gray-400 mb-10 font-medium">
           The page you're looking for has drifted into deep space.
         </p>
 
