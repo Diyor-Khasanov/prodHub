@@ -1,12 +1,43 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const musicOptions = [
+  { id: 'none', name: 'No Music', url: '' },
+  { id: 'airplane', name: 'Airplane', url: '/public/sounds/airplane.mp3' },
+  { id: 'brown-noise', name: 'Brown Noise', url: '/public/sounds/brown-noise.mp3' },
+  { id: 'bubbles', name: 'Bubbles', url: '/public/sounds/bubbles.mp3' },
+  { id: 'campfire', name: 'Campfire', url: '/public/sounds/campfire.mp3' },
+  { id: 'cicada', name: 'Cicada', url: '/public/sounds/cicada.mp3' },
+  { id: 'city-scape', name: 'City Scape', url: '/public/sounds/city-scape.mp3' },
+  { id: 'city-scape', name: 'City Scape', url: '/public/sounds/city-scape.mp3' },
+  { id: 'coffeeshop', name: 'Coffeeshop', url: '/public/sounds/coffeeshop.mp3' },
+  { id: 'cosmos', name: 'Cosmos', url: '/public/sounds/cosmos.mp3' },
+  { id: 'desert', name: 'Desert', url: '/public/sounds/desert.mp3' },
+  { id: 'fan', name: 'Fan', url: '/public/sounds/fan.mp3' },
+  { id: 'fire', name: 'Fire', url: '/public/sounds/fire.mp3' },
+  { id: 'fireplace', name: 'Fireplace', url: '/public/sounds/fireplace.mp3' },
+  { id: 'forest', name: 'Forest', url: '/public/sounds/forest.mp3' },
+  { id: 'leaves', name: 'Leaves', url: '/public/sounds/leaves.mp3' },
+  { id: 'ocean-waves', name: 'Ocean Waves', url: '/public/sounds/ocean-waves.mp3' },
+  { id: 'pink-noise', name: 'Pink Noise', url: '/public/sounds/pink-noise.mp3' },
+  { id: 'rain-and-thunder', name: 'Rain and Thunder', url: '/public/sounds/rain-and-thunder.mp3' },
+  { id: 'rain-low', name: 'Rain Low', url: '/public/sounds/rain-low.mp3' },
+  { id: 'rain-on-umbrella', name: 'Rain On Umbrella', url: '/public/sounds/rain-on-umbrella.mp3' },
+  { id: 'rain-tent', name: 'Rain Tent', url: '/public/sounds/rain-tent.mp3' },
+  { id: 'river-stream', name: 'River Stream', url: '/public/sounds/river-stream.mp3' },
+  { id: 'space-engine', name: 'Space Engine', url: '/public/sounds/space-engine.mp3' },
+  { id: 'summer-nights', name: 'Summer Nights', url: '/public/sounds/summer-nights.mp3' },
+  { id: 'thunderstorm', name: 'Thunderstorm', url: '/public/sounds/thunderstorm.mp3' },
+  { id: 'train', name: 'Train', url: '/public/sounds/train.mp3' },
+];
+
 const Pomodoro = () => {
   const [bgImage] = useState(localStorage.getItem('bgImage'));
   const [mode, setMode] = useState('focus');
   const [isActive, setIsActive] = useState(false);
 
   const alarmAudio = useRef(new Audio('/assets/musics/alarm(when_end_pomodoro).mp3'));
+  const bgMusicAudio = useRef(new Audio(''));
 
   const macSpring = {
     type: "spring",
@@ -14,6 +45,26 @@ const Pomodoro = () => {
     damping: 20,
     mass: 1
   };
+
+  useEffect(() => {
+    const selectedMusicId = sessionStorage.getItem('bgMusic') || 'none';
+    const music = musicOptions.find(m => m.id === selectedMusicId);
+
+    if (music && music.url) {
+      bgMusicAudio.current.src = music.url;
+      bgMusicAudio.current.loop = true;
+    } else {
+      bgMusicAudio.current.src = '';
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isActive && bgMusicAudio.current.src !== window.location.href) {
+      bgMusicAudio.current.play().catch(e => console.log("Music play error:", e));
+    } else {
+      bgMusicAudio.current.pause();
+    }
+  }, [isActive]);
 
   const getStoredTime = (key, defaultValue) => {
     const stored = sessionStorage.getItem(key);
@@ -54,6 +105,7 @@ const Pomodoro = () => {
       }, 1000);
     } else if (seconds === 0) {
       playAlarm();
+      bgMusicAudio.current.pause();
       clearInterval(interval);
       toggleMode();
     }
@@ -105,6 +157,7 @@ const Pomodoro = () => {
                 setMode(m);
                 setIsActive(false);
                 alarmAudio.current.pause();
+                bgMusicAudio.current.pause();
               }}
               className={`relative px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${mode === m ? 'bg-white/10 border border-white/20' : 'opacity-40'}`}
             >
@@ -174,6 +227,7 @@ const Pomodoro = () => {
                 setIsActive(false);
                 setSeconds(settings[mode].time);
                 alarmAudio.current.pause();
+                bgMusicAudio.current.pause();
               }}
               className="px-8 py-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/20 text-xl font-bold transition-all uppercase tracking-widest"
             >

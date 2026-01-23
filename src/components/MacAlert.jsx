@@ -35,7 +35,7 @@ const MacAlert = ({ type = 'success', message, isOpen, onClose }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-md bg-black/10">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-6 backdrop-blur-md bg-black/10">
           <motion.div
             initial={{ scale: 0.8, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
