@@ -91,7 +91,7 @@ const Tasks = () => {
     <div className='relative min-h-screen w-full flex flex-col items-center justify-center p-4 font-sans text-white'>
       {bgImage ? (
         <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-xl" />
         </div>
       ) : (
         <div className="absolute inset-0 z-0 bg-slate-950" />
@@ -101,7 +101,7 @@ const Tasks = () => {
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={macSpring}
-        className='relative z-10 w-full max-w-4xl h-[80vh] flex flex-col md:flex-row rounded-[32px] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl overflow-hidden'
+        className='relative z-10 w-full max-w-5xl h-[85vh] flex overflow-hidden rounded-3xl border border-white/30 shadow-2xl bg-black/10 backdrop-blur-3xl'
       >
         <div className="w-full md:w-64 bg-white/5 border-r border-white/10 p-6 flex flex-col">
           <div className="flex items-center justify-between mb-8">

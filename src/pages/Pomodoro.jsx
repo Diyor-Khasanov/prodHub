@@ -75,9 +75,9 @@ const Pomodoro = () => {
     focus: {
       time: getStoredTime('focusTime', 25),
       label: 'Focus Time',
-      color: 'text-blue-400',
-      btnColor: 'border-blue-400/40 text-blue-50',
-      liquid: 'bg-blue-500/30',
+      color: 'text-blue-500',
+      btnColor: 'border-blue-500/10 text-blue-50',
+      liquid: 'bg-blue-500/50',
       glow: 'bg-blue-500/20'
     },
     break: {
@@ -134,7 +134,7 @@ const Pomodoro = () => {
     <div className='relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-white'>
       {bgImage ? (
         <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-xl" />
         </div>
       ) : (
         <div className="absolute inset-0 z-0 bg-slate-950" />
@@ -145,7 +145,7 @@ const Pomodoro = () => {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={macSpring}
         layout
-        className='relative z-10 w-[90%] max-w-xl p-8 md:p-12 rounded-[40px] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl text-center'
+        className='relative z-10 w-[90%] max-w-xl p-8 md:p-12 rounded-[40px] bg-white/2 backdrop-blur-3xl border border-white/30 shadow-2xl text-center'
       >
         <div className="flex justify-center gap-4 mb-8">
           {['focus', 'break'].map((m) => (

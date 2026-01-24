@@ -233,19 +233,17 @@ const Home = () => {
   return (
     <div className='relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-white'>
       {bgImage ? (
-        <div className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-1000" style={{ backgroundImage: `url(${bgImage})` }}>
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-xl" />
         </div>
       ) : (
-        <div className="absolute inset-0 z-0 bg-slate-950">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/20 blur-[100px] rounded-full" />
-        </div>
+        <div className="absolute inset-0 z-0 bg-slate-950" />
       )}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className='relative z-10 w-[90%] max-w-xl p-10 rounded-[40px] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl text-center'
+        className='relative z-10 w-[90%] max-w-xl p-10 rounded-[40px] bg-white/1 backdrop-blur-3xl border border-white/20 shadow-2xl text-center'
       >
         <div className="flex justify-center items-center text-6xl md:text-8xl font-mono font-bold tracking-tighter mb-2">
           {timeString.split('').map((char, index) => (
