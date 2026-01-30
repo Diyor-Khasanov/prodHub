@@ -91,7 +91,7 @@ const Notes = () => {
     const newNotes = notes.filter(n => n.id !== id);
     setNotes(newNotes);
     if (selectedId === id) setSelectedId(newNotes[0]?.id || null);
-    setAlertConfig({ isOpen: true, type: 'info', message: "Note moved to trash" });
+    setAlertConfig({ isOpen: true, type: 'info', message: "Note deleted successfully" });
   };
 
   const confirmPassword = () => {
@@ -121,6 +121,29 @@ const Notes = () => {
     }
     setPasswordInput('');
   };
+
+  const removePassword = (noteId) => {
+    setNotes(prev =>
+      prev.map(note =>
+        note.id === noteId
+          ? {
+            ...note,
+            locked: false,
+            password: null
+          }
+          : note
+      )
+    );
+
+    setUnlockedNotes(prev => prev.filter(id => id !== noteId));
+
+    setAlertConfig({
+      isOpen: true,
+      type: 'info',
+      message: 'Password removed successfully'
+    });
+  };
+
 
   const activeNote = notes.find(n => n.id === selectedId);
   const isAccessible = activeNote && (!activeNote.locked || unlockedNotes.includes(activeNote.id));
@@ -238,16 +261,36 @@ const Notes = () => {
         )}
       </AnimatePresence>
 
-      {/* Sidebar Kontekst Menyusi (Pin/Lock/Delete) */}
       <AnimatePresence>
         {contextMenu.visible && (
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x }} className="z-[999] w-48 bg-neutral-900/90 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-1.5">
             <button onClick={() => { updateNote(contextMenu.noteId, 'pinned', !notes.find(n => n.id === contextMenu.noteId).pinned); setContextMenu({ ...contextMenu, visible: false }); }} className="flex w-full items-center gap-3 px-3 py-2 text-sm text-white hover:bg-blue-600 rounded-xl transition-colors">
               <Pin size={14} /> {notes.find(n => n.id === contextMenu.noteId)?.pinned ? 'Unpin' : 'Pin Note'}
             </button>
-            <button onClick={() => { setLockModal({ open: true, noteId: contextMenu.noteId }); setContextMenu({ ...contextMenu, visible: false }); }} className="flex w-full items-center gap-3 px-3 py-2 text-sm text-white hover:bg-blue-600 rounded-xl transition-colors">
-              <Lock size={14} /> Lock/Unlock
-            </button>
+            {(() => {
+              const note = notes.find(n => n.id === contextMenu.noteId);
+              const isLocked = note?.locked;
+
+              return (
+                <button
+                  onClick={() => {
+                    const note = notes.find(n => n.id === contextMenu.noteId);
+
+                    if (note.locked) {
+                      removePassword(note.id);
+                    } else {
+                      setLockModal({ open: true, noteId: note.id });
+                    }
+
+                    setContextMenu({ ...contextMenu, visible: false });
+                  }}
+                  className="flex w-full items-center gap-3 px-3 py-2 text-sm text-white hover:bg-blue-600 rounded-xl transition-colors"
+                >
+                  {isLocked ? <Unlock size={14} /> : <Lock size={14} />}
+                  {isLocked ? 'Remove Password' : 'Set Password'}
+                </button>
+              );
+            })()}
             <div className="h-px bg-white/10 my-1" />
             <button onClick={() => { deleteNote(contextMenu.noteId); setContextMenu({ ...contextMenu, visible: false }); }} className="flex w-full items-center gap-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-colors">
               <Trash2 size={14} /> Delete

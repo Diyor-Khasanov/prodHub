@@ -24,7 +24,7 @@ const alertStyles = {
 };
 
 const MacAlert = ({ type = 'success', message, isOpen, onClose }) => {
-  const config = alertStyles[type];
+  const config = alertStyles[type] || alertStyles.success;
 
   useEffect(() => {
     if (isOpen && window.navigator.vibrate) {
@@ -41,7 +41,7 @@ const MacAlert = ({ type = 'success', message, isOpen, onClose }) => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 10 }}
             transition={{ type: "spring", damping: 20, stiffness: 250 }}
-            className={`relative w-full max-w-[500px] overflow-hidden ${config.shadow}`}
+            className={`relative w-full max-w-[500px] overflow-hidden ${config.shadow || 'shadow-[0_0_30px_rgba(0,0,0,0.3)]'}`}
             style={{ borderRadius: '32px' }}
           >
             <div className="relative overflow-hidden bg-white/60 dark:bg-black/40 backdrop-blur-3xl border border-white/30 dark:border-white/10 p-6 flex flex-col items-center">
