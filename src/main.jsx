@@ -7,7 +7,6 @@ import Home from './pages/Home.jsx'
 import Pomodoro from './pages/Pomodoro.jsx'
 import Tasks from './pages/Tasks.jsx'
 import Notes from './pages/Notes.jsx'
-import BlockSites from './pages/BlockSites.jsx'
 import Links from './pages/Links.jsx'
 import Calendar from './pages/Calendar.jsx'
 import Settings from './pages/Settings.jsx'
@@ -33,10 +32,6 @@ const router = createBrowserRouter([
       {
         path: '/notes',
         element: <Notes />
-      },
-      {
-        path: '/blockSites',
-        element: <BlockSites />
       },
       {
         path: '/links',

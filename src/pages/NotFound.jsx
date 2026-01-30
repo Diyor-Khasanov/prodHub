@@ -9,14 +9,10 @@ const NotFoundPage = () => {
   const [bgImage] = useState(localStorage.getItem('bgImage'))
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950 bg-linear-to-br from-slate-950 to-blue-950">
-      {bgImage ? (
-        <div className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-1000" style={{ backgroundImage: `url(${bgImage})` }}>
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
-        </div>
-      ) : (
-        <div className="absolute inset-0 z-0 bg-slate-950">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/20 blur-[100px] rounded-full" />
+    <div className="min-h-screen relative w-full flex items-center justify-center p-6 font-sans select-none overflow-hidden bg-slate-950">
+      {bgImage && (
+        <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-xl" />
         </div>
       )}
 

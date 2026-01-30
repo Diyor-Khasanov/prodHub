@@ -164,7 +164,6 @@ const Notes = () => {
 
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative z-10 w-full max-w-5xl h-[85vh] flex overflow-hidden rounded-3xl border border-white/20 shadow-2xl bg-black/20 backdrop-blur-3xl">
 
-        {/* Sidebar */}
         <AnimatePresence initial={false}>
           {isSidebarOpen && (
             <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: 280, opacity: 1 }} exit={{ width: 0, opacity: 0 }} className="border-r border-white/10 flex flex-col overflow-hidden bg-white/5">
@@ -198,7 +197,6 @@ const Notes = () => {
           )}
         </AnimatePresence>
 
-        {/* Editor Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="h-16 flex items-center justify-between px-6 border-b border-white/5 shrink-0">
             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 hover:bg-white/10 rounded-xl transition-colors text-blue-400"><SidebarIcon size={20} /></button>
@@ -242,7 +240,6 @@ const Notes = () => {
         </div>
       </motion.div>
 
-      {/* Editor Kontekst Menyusi (Formatting) */}
       <AnimatePresence>
         {editorMenu.visible && (
           <motion.div
@@ -299,7 +296,6 @@ const Notes = () => {
         )}
       </AnimatePresence>
 
-      {/* Lock Modal */}
       <AnimatePresence>
         {lockModal.open && (
           <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
